@@ -13,11 +13,11 @@ convert=math.pi/180
 from picamera2 import Picamera2
 #*****************************************
 
-ring1_1=create_region((308, 252),200,240,310,322)#298,310)
-ring1_2=create_region((308, 252),200,240,223,312) #2 degree overlap
-ring1_3=create_region((308, 252),200,240,136,233) #5 degree overlap
-ring1_4=create_region((308, 252),203,240,44,136)  #5 degree overlap
-ring1_5=create_region((308, 252),203,240,-40,49)  #2 degree overlap
+ring1_1=create_region((458,469),267,308,265,277)#298,310)
+ring1_2=create_region((458, 469),275,308,181,268) #2 degree overlap
+ring1_3=create_region((458, 469),269,308,87,184) #5 degree overlap
+ring1_4=create_region((458, 469),269,308,-3,87)  #5 degree overlap
+ring1_5=create_region((458, 469),275,308,-86,0)  #2 degree overlap
 
 ring2_1=create_region((308, 252),155,200,-25,26)
 ring2_2=create_region((308, 252),155,200,225,340)
@@ -37,14 +37,14 @@ ring3_5=create_region((308, 252),113,150,43,110)
 # ring4_4=create_region((308, 252),78,103,-45,-5)
 # ring4_5=create_region((308, 252),78,103,-97,-45)
 # ring5_1=create_region((308, 252),0,50,0,360)
-ramp=create_region((308, 252),58,204,39,50)
+ramp=create_region((458,469),80,279,-7,4)
 #************************************************
-# SerialObj = serial.Serial('COM8', 115200, timeout=30, parity=serial.PARITY_EVEN, rtscts=1)# COMxx   format on Windows
-# SerialObj.baudrate = 115200  # set Baud rate to 9600
-# SerialObj.bytesize = 8     # Number of data bits = 8
-# SerialObj.parity   ='N'    # No parity
-# SerialObj.stopbits = 1     # Number of Stop bits = 1
-# SerialObj.write(b'VLS 10\n')
+SerialObj = serial.Serial('/dev/ttyUSB0', 115200, timeout=30, parity=serial.PARITY_EVEN, rtscts=1)# COMxx   format on Windows
+SerialObj.baudrate = 115200  # set Baud rate to 9600
+SerialObj.bytesize = 8     # Number of data bits = 8
+SerialObj.parity   ='N'    # No parity
+SerialObj.stopbits = 1     # Number of Stop bits = 1
+SerialObj.write(b'VLS 15\n')
 #************************************************* 
 Ball_Tracking=[]
 Prev_Region="Deez Nuts"
@@ -70,8 +70,8 @@ while (True):
         if cap1==1:
             Maze=frame
             cap1=0
-            cv2.imwrite('YourMoM.jpg',frame)
-#             break
+            cv2.imwrite('poopoopeepee.jpg',frame)
+            break
         Ball_Location=Ball_detection(frame,Ball_Tracking)
         if(Ball_Location!=0):
             Current_Region=Region_Detection(Ball_Location,frame)
@@ -79,8 +79,8 @@ while (True):
             if(Current_Region!=0):
                 if(Current_Region[4]!=Prev_Region[4]):
                     Error_List=[0]
-                print(Current_Region)
-#                 Move_Hexxy_JR(Current_Region,SerialObj,cap,Ball_Tracking,Error_List)
+                #print(Current_Region)
+                Move_Hexxy_JR(Current_Region,SerialObj,Ball_Tracking,Error_List,piCam)
                 Prev_Region=Current_Region
             else:
                 print("No Location G")
@@ -117,13 +117,14 @@ rect = patches.Circle((308, 252), 240, linewidth=1, edgecolor='r', facecolor='no
 
 
 #plt.plot([item[0] for item in Ball_Location], [item[1] for item in Ball_Location])
-# plt.scatter([item[0] for item in ring1_1], [item[1] for item in ring1_1])
-# plt.scatter([item[0] for item in ring1_2], [item[1] for item in ring1_2],s=.5)
-# plt.scatter([item[0] for item in ring1_3], [item[1] for item in ring1_3],s=.5)
-# plt.scatter([item[0] for item in ring1_4], [item[1] for item in ring1_4],s=.5)
-# plt.scatter([item[0] for item in ring1_5], [item[1] for item in ring1_5],s=.5)
-# plt.scatter(int(160*math.cos(304*convert)+308),int(160*math.sin(304*convert)+252),s=4)
-# plt.scatter(int(220*math.cos(304*convert)+308),int(220*math.sin(304*convert)+252),s=4)
+plt.scatter([item[0] for item in ring1_1], [item[1] for item in ring1_1])
+plt.scatter([item[0] for item in ring1_2], [item[1] for item in ring1_2],s=.5)
+plt.scatter([item[0] for item in ring1_3], [item[1] for item in ring1_3],s=.5)
+plt.scatter([item[0] for item in ring1_4], [item[1] for item in ring1_4],s=.5)
+plt.scatter([item[0] for item in ring1_5], [item[1] for item in ring1_5],s=.5)
+plt.scatter(int(210*math.cos(271*convert)+458),int(210*math.sin(271*convert)+469),s=4)
+plt.scatter(int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469),s=4)
+plt.scatter(int(300*math.cos(-1*convert)+458),int(300*math.sin(-1*convert)+469),s=4)
 # plt.scatter([item[0] for item in ring2_1], [item[1] for item in ring2_1],s=.5)
 # plt.scatter([item[0] for item in ring2_2], [item[1] for item in ring2_2],s=.5)
 # plt.scatter([item[0] for item in ring2_3], [item[1] for item in ring2_3],s=.5)

@@ -13,8 +13,9 @@ def create_list(ranges,steps):
     for i in range(len(ranges)-1):
        lists=np.concatenate((lists,np.linspace(ranges[i],ranges[i+1], num=steps))) 
     return lists
-
-ring1_1=create_region((458,469),267,308,265,277)#298,310)
+Origin_X=340
+Origin_Y=310
+ring1_1=create_region((340,310),240,328,262,277)#298,310)
 ring1_2=create_region((458, 469),275,308,181,268) #2 degree overlap
 ring1_3=create_region((458, 469),269,308,87,184) #5 degree overlap
 ring1_4=create_region((458, 469),269,308,-3,87)  #5 degree overlap
@@ -35,59 +36,60 @@ ramp=create_region((458,469),80,279,-7,4)
 
 convert=math.pi/180
 
-P=.0017
+P=.005
 I=0#0.000009
-D=.09
+D=0#.09
 P_out=.001
 I_out=0#0.000009
-D_out=.01
+D_out=0#.01
 
 P_2=0.0025
 I_2=0.00001
 D_2=0.09
 Region = {
-  "Ring1_1" :{"Area":ring1_1,"X_pos":0,
-                             "Y_pos":-10,
+  "Ring1_1" :{"Area":[240,328,262,277],#[Inner Diameter, Outer Diameter, Min Angle, Max Angle]
+                              "X_pos":0,
+                             "Y_pos":0,#-10,
                              "P Gain":0.0015,
                              "I Gain":0.00,
                              "D Gain":0.00,
                              "Target":[int(210*math.cos(271*convert)+458),int(210*math.sin(271*convert)+469)], #[x,y]
                               "Stuck":[[-3,0]]},
-   "Ring1_2" :{"Area":ring1_2,"X_pos":1,
-                              "Y_pos":5,#-1
-                              "P Gain":P,#.003,
-                               "I Gain":I,#0.00001,
-                               "D Gain":D,#0.1,
-                              "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-                              "Stuck":[[5,0]]},
-  "Ring1_3" :{"Area":ring1_3,"X_pos":-5,
-                             "Y_pos":5,
-                             "P Gain":P_out,#.0015,
-                             "I Gain":I_out,#0,
-                             "D Gain":D_out,#0.1,
-                             "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-                             "Stuck":[[0,5]]},
-   "Ring1_5" :{"Area":ring1_5,"X_pos":-1,
-                              "Y_pos":5,#1
-                              "P Gain":P+.001,#.003,
-                              "I Gain":I,#0.00001,
-                              "D Gain":D-.02,#0.1,
-                              "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-                              "Stuck":[[7,0]]},
-   "Ring1_4" :{"Area":ring1_4,"X_pos":5,
-                               "Y_pos":5,
-                               "P Gain":P_out,#.0015,
-                               "I Gain":I_out,#0,
-                               "D Gain":D_out,#.1,
-                               "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-                               "Stuck":[[0,5]]},
-   "Ramp_0" :{"Area":ramp,"X_pos":2.5,
-                               "Y_pos":10,
-                               "P Gain":0,
-                               "I Gain":0.0000,
-                               "D Gain":0.00,
-                               "Target":[int(300*math.cos(-1*convert)+458),int(300*math.sin(-1*convert)+469)],
-                               "Stuck":[[-10,1]]},
+#    "Ring1_2" :{"Area":ring1_2,"X_pos":1,
+#                               "Y_pos":5,#-1
+#                               "P Gain":P,#.003,
+#                                "I Gain":I,#0.00001,
+#                                "D Gain":D,#0.1,
+#                               "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
+#                               "Stuck":[[5,0]]},
+#   "Ring1_3" :{"Area":ring1_3,"X_pos":-5,
+#                              "Y_pos":5,
+#                              "P Gain":P_out,#.0015,
+#                              "I Gain":I_out,#0,
+#                              "D Gain":D_out,#0.1,
+#                              "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
+#                              "Stuck":[[0,5]]},
+#    "Ring1_5" :{"Area":ring1_5,"X_pos":-1,
+#                               "Y_pos":5,#1
+#                               "P Gain":P,#.003,
+#                               "I Gain":I,#0.00001,
+#                               "D Gain":D,#0.1,
+#                               "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
+#                               "Stuck":[[7,0]]},
+#    "Ring1_4" :{"Area":ring1_4,"X_pos":5,
+#                                "Y_pos":5,
+#                                "P Gain":P_out,#.0015,
+#                                "I Gain":I_out,#0,
+#                                "D Gain":D_out,#.1,
+#                                "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
+#                                "Stuck":[[0,5]]},
+#    "Ramp_0" :{"Area":ramp,"X_pos":10,
+#                                "Y_pos":0,
+#                                "P Gain":0.01,
+#                                "I Gain":0.0000,
+#                                "D Gain":0.00,
+#                                "Target":[int(300*math.cos(-1*convert)+458),int(300*math.sin(-1*convert)+469)],
+#                                "Stuck":[[-10,1]]},
 
     # "Ring2_1" :{"Area":ring2_1,"X_pos":5,
     #                             "Y_pos":0,

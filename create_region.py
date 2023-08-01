@@ -11,7 +11,7 @@ def create_region(center,inner_ring,outer_ring,start,end):
     convert=math.pi/180
     for i in range(ring_girth):
         for j in range(start,end):
-            x=int((inner_ring+i)*math.cos(j*convert)+center[0])
-            y=int((inner_ring+i)*math.sin(j*convert)+center[1])
+            x=int((inner_ring+i)*math.cos((-j)*convert)+center[0])
+            y=int((inner_ring+i)*math.sin((-j)*convert)+center[1])
             region.append((x,y))
     return region

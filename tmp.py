@@ -6,7 +6,7 @@ SerialObj.bytesize = 8     # Number of data bits = 8
 SerialObj.parity   ='N'    # No parity
 SerialObj.stopbits = 1     # Number of Stop bits = 1
 SerialObj.write(b'VLS 10\n')
-SerialObj.write(('MOV U '+str(10)+' V '+str(3)+'\n').encode('ascii'))
-time.sleep(.5)
+SerialObj.write(('MOV U '+str(-5)+' V '+str(5)+'\n').encode('ascii'))
+time.sleep(5)
 SerialObj.write(('MOV U '+str(0)+' V '+str(0)+'\n').encode('ascii'))
 SerialObj.close()

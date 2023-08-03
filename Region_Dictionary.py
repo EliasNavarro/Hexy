@@ -13,32 +13,14 @@ def create_list(ranges,steps):
     for i in range(len(ranges)-1):
        lists=np.concatenate((lists,np.linspace(ranges[i],ranges[i+1], num=steps))) 
     return lists
-Origin_X=340
-Origin_Y=310
-ring1_1=create_region((340,310),240,328,262,277)#298,310)
-ring1_2=create_region((458, 469),275,308,181,268) #2 degree overlap
-ring1_3=create_region((458, 469),269,308,87,184) #5 degree overlap
-ring1_4=create_region((458, 469),269,308,-3,87)  #5 degree overlap
-ring1_5=create_region((458, 469),275,308,-86,0)  #2 degree overlap
-ramp=create_region((458,469),80,279,-7,4)
-
-# ring2_1=create_region((308, 252),155,200,-25,26)
-# ring2_2=create_region((308, 252),155,200,225,340)
-# ring2_3=create_region((308, 252),155,200,202,230)
-# ring2_4=create_region((308, 252),155,200,110,210)
-# ring2_5=create_region((308, 252),155,200,40,110)
-
-# ring3_1=create_region((308, 252),113,150,-40,23)
-# ring3_2=create_region((308, 252),113,150,240,320)
-# ring3_3=create_region((308, 252),113,150,140,245)
-# ring3_4=create_region((308, 252),113,150,105,145)
-# ring3_5=create_region((308, 252),113,150,43,110)
+Origin_X=97
+Origin_Y=89
 
 convert=math.pi/180
 
-P=.005
-I=0#0.000009
-D=0#.09
+P=.006
+I=.00000#0.000009
+D=0 #.09
 P_out=.001
 I_out=0#0.000009
 D_out=0#.01
@@ -47,21 +29,21 @@ P_2=0.0025
 I_2=0.00001
 D_2=0.09
 Region = {
-  "Ring1_1" :{"Area":[240,328,262,277],#[Inner Diameter, Outer Diameter, Min Angle, Max Angle]
+  "Ring1_1" :{"Area":[80,96,82,95],#[Inner Diameter, Outer Diameter, Min Angle, Max Angle]
                               "X_pos":0,
-                             "Y_pos":0,#-10,
-                             "P Gain":0.0015,
+                             "Y_pos":-5,#-10,
+                             "P Gain":0.03,
                              "I Gain":0.00,
                              "D Gain":0.00,
-                             "Target":[int(210*math.cos(271*convert)+458),int(210*math.sin(271*convert)+469)], #[x,y]
+                             "Target":[int(70*math.cos(-88*convert)+97),int(70*math.sin(-88*convert)+89)], #[x,y]
                               "Stuck":[[-3,0]]},
-#    "Ring1_2" :{"Area":ring1_2,"X_pos":1,
-#                               "Y_pos":5,#-1
-#                               "P Gain":P,#.003,
-#                                "I Gain":I,#0.00001,
-#                                "D Gain":D,#0.1,
-#                               "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-#                               "Stuck":[[5,0]]},
+   "Ring1_2" :{"Area":[82,96,90,180],"X_pos":-2,
+                              "Y_pos":4,
+                              "P Gain":P,#.003,
+                               "I Gain":I,#0.00001,
+                               "D Gain":D,#0.1,
+                              "Target":[int(89*math.cos(-88*convert)+97),int(89*math.sin(-88*convert)+89)],
+                              "Stuck":[[5,0]]},
 #   "Ring1_3" :{"Area":ring1_3,"X_pos":-5,
 #                              "Y_pos":5,
 #                              "P Gain":P_out,#.0015,
@@ -69,13 +51,13 @@ Region = {
 #                              "D Gain":D_out,#0.1,
 #                              "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
 #                              "Stuck":[[0,5]]},
-#    "Ring1_5" :{"Area":ring1_5,"X_pos":-1,
-#                               "Y_pos":5,#1
-#                               "P Gain":P,#.003,
-#                               "I Gain":I,#0.00001,
-#                               "D Gain":D,#0.1,
-#                               "Target":[int(287*math.cos(271*convert)+458),int(287*math.sin(271*convert)+469)],
-#                               "Stuck":[[7,0]]},
+   "Ring1_5" :{"Area":[82,96,0,84],"X_pos":2,
+                              "Y_pos":4,#1
+                              "P Gain":P,#.003,
+                              "I Gain":I,#0.00001,
+                              "D Gain":D,#0.1,
+                              "Target":[int(44*math.cos(268*convert)+50),int(44*math.sin(268*convert)+43)],
+                              "Stuck":[[7,0]]},
 #    "Ring1_4" :{"Area":ring1_4,"X_pos":5,
 #                                "Y_pos":5,
 #                                "P Gain":P_out,#.0015,

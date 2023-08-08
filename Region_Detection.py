@@ -11,13 +11,25 @@ import numpy as np
 import math
 from picamera2 import Picamera2
 #*********************************************
-def picture_transform(frame):
-    roi =np.zeros(frame.shape[:2],np.uint8)
-    roi =cv2.circle(roi, (50,43),49,255,cv2.FILLED)
-    mask=np.ones_like(frame)*255
-    mask=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi))
-    #frame=cv2.medianBlur(mask,3)
-    return mask
+def stuck(Ball_Tracking):
+    if(len(set(Ball_Tracking))<4 and len(Ball_Tracking)>9):
+        print("Stuck")
+        for i in Region[Curr_Region]["Stuck"]:
+            Tilt_X_off=i[0]
+            Tilt_Y_off=i[1]
+            SerialObj.write(('MOV U '+str(Tilt_X_off)+' V '+str(Tilt_Y_off)+'\n').encode('ascii'))
+            for i in range(20):
+                frame=piCam.capture_array()
+                frame=picture_transform(frame)
+                Area=Ball_detection(frame,Ball_Tracking)
+                if(Area!=0):
+                    if(Region_Detection(Area,frame)!=Curr_Region):
+                        print("Middel Change")
+                        return True
+                time.sleep(.05)
+        #Ball_Tracking=[Ball_Tracking[-1]]
+        return True
+    return False
 #*********************************************
 def rectangle_coords(x,y,size):
     sizee=int(size/2)
@@ -39,21 +51,24 @@ def Move_Hexxy_JR(Curr_Region,SerialObj,Ball_Tracking,Error_List,video_getter):
     Error=math.sqrt(((Ball_Coords[0]-Target[0])**2)+((Ball_Coords[1]-Target[1])**2))
     I_Sum=0
     counter=0
+    start=time.time()
     while(Error>1):
-        start=time.time()
-        Current_Time=time.time()
-        Elapse_Time=Current_Time-Start_Time+1
+        Elapse_Time=time.time()-start
         frame = video_getter.frame
-        #frame=picture_transform(frame)
-        #cv2.imshow('Original',frame)
         Ball_Current_Location=Ball_detection(frame,Ball_Tracking)
         Ball_Coords=Ball_Tracking[-1]
+        n=.5
+        LP_Ball_Coords=[(Ball_Tracking[-2][0]*n)+(Ball_Tracking[-1][0]*(1-n)),(Ball_Tracking[-2][1]*n)+(Ball_Tracking[-1][1]*(1-n))]
+        LP_Error=math.sqrt(((LP_Ball_Coords[0]-Target[0])**2)+((LP_Ball_Coords[1]-Target[1])**2))
         Error=math.sqrt(((Ball_Coords[0]-Target[0])**2)+((Ball_Coords[1]-Target[1])**2))
-        Error_List.append(Error)
+        #print(LP_Error)
+        Error_List.append(LP_Error)
         Diff_Error=Error_List[-1]-Error_List[-2]
+#         if(Diff_Error>0):
+#             Diff_Error=0
 #         print(Curr_Region)
-        print("Error")
-        print(Error)
+#         print("Error")
+#         print(Error)
 #         print("Error Sum")
 #         print(sum(Error_List))
 #         print("Error Diff")
@@ -62,8 +77,8 @@ def Move_Hexxy_JR(Curr_Region,SerialObj,Ball_Tracking,Error_List,video_getter):
 #         print(((Error*P_Gain)+(sum(Error_List)*I_Gain)+(Diff_Error*D_Gain)))
 #         print("***************")
 #         time.sleep(5)
-        Tilt_X=round(Region[Curr_Region]["X_pos"]*((Error*P_Gain)+(sum(Error_List)*I_Gain)+(Diff_Error*D_Gain)),1)
-        Tilt_Y=round(Region[Curr_Region]["Y_pos"]*((Error*P_Gain)++(sum(Error_List)*I_Gain)+(Diff_Error*D_Gain)),1)
+        Tilt_X=round(Region[Curr_Region]["X_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)
+        Tilt_Y=round(Region[Curr_Region]["Y_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)
         
         if(Ball_Current_Location!=0):
             if(Region_Detection(Ball_Current_Location,frame)!=Curr_Region):
@@ -78,29 +93,15 @@ def Move_Hexxy_JR(Curr_Region,SerialObj,Ball_Tracking,Error_List,video_getter):
                 break
         else:
             break
-#         if(len(set(Ball_Tracking))<4 and len(Ball_Tracking)>9):
-#             print("Stuck")
-#             for i in Region[Curr_Region]["Stuck"]:
-#                 Tilt_X_off=i[0]
-#                 Tilt_Y_off=i[1]
-#                 SerialObj.write(('MOV U '+str(Tilt_X_off)+' V '+str(Tilt_Y_off)+'\n').encode('ascii'))
-#                 for i in range(20):
-#                     frame=piCam.capture_array()
-#                     frame=picture_transform(frame)
-#                     cv2.imshow('Original',frame)
-#                     Area=Ball_detection(frame,Ball_Tracking)
-#                     if(Area!=0):
-#                         if(Region_Detection(Area,frame)!=Curr_Region):
-#                             print("Middel Change")
-#                             return
-#                     time.sleep(.05)
-#             Ball_Tracking=[Ball_Tracking[-1]]
-#             continue
+#         if(Stuck(Ball_Tracking)==True):
+#            continue
 
         SerialObj.write(('VMO? U '+str(Tilt_X)+' V '+str(Tilt_Y)+'\n').encode('ascii'))
         Can_Move_There=SerialObj.readline()
         if(int(Can_Move_There.decode())==1):
             SerialObj.write(('MOV U '+str(Tilt_X)+' V '+str(Tilt_Y)+'\n').encode('ascii'))
+            #print(Tilt_X,Tilt_Y)
+            time.sleep(.02)
 
         
 #*********************************************
@@ -128,21 +129,11 @@ def Region_Detection(Ball_Local,frame):
     #cv2.imshow('Original',frame)
 #*********************************************
 def Ball_detection(frame,Ball_Tracking):
-#     into_hsv =cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-#     L_limit=np.array([41,103,0])#[59,162,0]) # setting the Green Balllower limit
-#     U_limit=np.array([255,255,255])#[139,255,183]) # setting the Green Ball upper limit
-#     b_mask=cv2.inRange(into_hsv,L_limit,U_limit)
-    #b_mask=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    #b_mask=cv2.inRange(frame,0,30)
     contours,_=cv2.findContours(frame,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    #cv2.imshow('Original',b_mask)
-    #time.sleep(.5)
-    #contours,_=cv2.findContours(frame,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    #print(len(contours))
     for cnt in contours:
         areas=cv2.contourArea(cnt)
         #print(areas)
-        if (areas>15 and areas<350): # will change depending on the distance of the image
+        if (areas>1 and areas<350): # will change depending on the distance of the image
             x,y,w,h=cv2.boundingRect(cnt)
 #             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
 #             cv2.putText(frame,("Ball"),(x,y-10),cv2.FONT_HERSHEY_PLAIN,5,(255,0,0))
@@ -154,7 +145,7 @@ def Ball_detection(frame,Ball_Tracking):
             #print(Ball_Tracking)
             x=int(x+(w/2))
             y=int(y+(h/2))
-#             print(x,y)
+            #print(x,y)
             Ball_Current_Location=(x,y)
 #             frame[y][x]=(255,255,255)
 #             frame[y+1][x]=(255,255,255)
@@ -167,4 +158,9 @@ def Ball_detection(frame,Ball_Tracking):
 #             frame[y-1][x-1]=(255,255,255)
 
             return Ball_Current_Location
+    if len(Ball_Tracking)<10:
+        Ball_Tracking.append((0,0))
+    else:
+        Ball_Tracking.pop(0)
+        Ball_Tracking.append((0,0))
     return 0

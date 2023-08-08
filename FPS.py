@@ -5,11 +5,11 @@ import cv2
 from picamera2 import Picamera2
 import numpy as np
 piCam=Picamera2()
-piCam.preview_configuration.main.size=(900,1000)#(1280,720)
-piCam.preview_configuration.main.format="RGB888"
-piCam.preview_configuration.controls.FrameRate=10
+piCam.preview_configuration.main.size=(100,100)#(1280,720)
+piCam.preview_configuration.main.format="YUV420"
+piCam.preview_configuration.controls.FrameRate=30
 piCam.preview_configuration.align()
-piCam.configure("video")
+piCam.configure("preview")
 piCam.start()
 # creating the videocapture object
 # and reading from the input file
@@ -30,6 +30,7 @@ while(True):
 
 	#ret, frame = cap.read()
     frame=piCam.capture_array()
+    frame=frame   [:100,:100]
 	# if video finished or no Video Input
 
 	# Our operations on the frame come here

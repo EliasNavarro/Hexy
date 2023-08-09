@@ -23,7 +23,7 @@ def picture_transform(frame):
     frame=frame[0:100,13:112]
     frame=cv2.medianBlur(frame,5)
     roi =np.zeros(frame.shape[:2],np.uint8)
-    roi =cv2.circle(roi,(50,50),47,255,cv2.FILLED)
+    roi =cv2.circle(roi,(53,46),47,255,cv2.FILLED)
     mask=np.ones_like(frame)*255
     bounded_Region=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi))
     #bounded_Region=cv2.resize(bounded_Region,(300,300))
@@ -33,7 +33,7 @@ def semi_picture_transform(frame):
     frame=frame[0:100,13:112]
     #frame=cv2.medianBlur(frame,5)
     roi =np.zeros(frame.shape[:2],np.uint8)
-    roi =cv2.circle(roi, (50, 50),96,255,cv2.FILLED)
+    roi =cv2.circle(roi, (53, 46),47,255,cv2.FILLED)
     mask=np.ones_like(frame)*255
     bounded_Region=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi))
     #bounded_Region=cv2.cvtColor(bounded_Region,cv2.COLOR_BGR2GRAY)

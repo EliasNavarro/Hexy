@@ -79,7 +79,10 @@ def Move_Hexxy_JR(Curr_Region,SerialObj,Ball_Tracking,Error_List,video_getter):
 #         time.sleep(5)
         Tilt_X=round(Region[Curr_Region]["X_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)
         Tilt_Y=round(Region[Curr_Region]["Y_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)
-        
+        if(Curr_Region=="Ramp0_1" or Curr_Region=="Ramp0_2"or Curr_Region=="Ring5_1" or Curr_Region == "Ring1_1"or Curr_Region == "Ring4_4"):
+            print('ya boi')
+            Tilt_X=Region[Curr_Region]["X_pos"]
+            Tilt_Y=Region[Curr_Region]["Y_pos"]
         if(Ball_Current_Location!=0):
             if(Region_Detection(Ball_Current_Location,frame)!=Curr_Region):
 #                 print('coord')

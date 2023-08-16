@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 26 16:55:08 2023
 
-@author: maena
+"""
+Input: Center of maze (X,Y), inner_ring radius, outer_ring radius, start angle, end anlge
+Output: A list of points of the region
+Description: Takes region parameters and creat a list of all the possibles area in the region
+Note: Not used in the actual code, just to create graph of ring in show_map
 """
 import math
 def create_region(center,inner_ring,outer_ring,start,end):
-    ring_girth=outer_ring-inner_ring
+    ring_girth=outer_ring-inner_ring 
     region=[]
     convert=math.pi/180
     for i in range(ring_girth):

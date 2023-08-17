@@ -8,25 +8,28 @@ from PIJoystick import PIJoystick
 from pipython.pidevice.gcsmessages import GCSMessages
 from pipython.pidevice.gcscommands import GCSCommands
 #*********************************************
-def stuck(Ball_Tracking):
-    if(len(set(Ball_Tracking))<4 and len(Ball_Tracking)>9):
-        print("Stuck")
-        for i in Region[Curr_Region]["Stuck"]:
-            Tilt_X_off=i[0]
-            Tilt_Y_off=i[1]
-            SerialObj.write(('MOV U '+str(Tilt_X_off)+' V '+str(Tilt_Y_off)+'\n').encode('ascii'))
-            for i in range(20):
-                frame=piCam.capture_array()
-                frame=picture_transform(frame)
-                Area=Ball_detection(frame,Ball_Tracking)
-                if(Area!=0):
-                    if(Region_Detection(Area,frame)!=Curr_Region):
-                        print("Middel Change")
-                        return True
-                time.sleep(.05)
-        #Ball_Tracking=[Ball_Tracking[-1]]
+'''
+Input: Time elapsed/passed, Controller
+Output: None
+Description: Checks to see if the elapse time is more than 5, seconds, then it will move the Hexapod 
+'''
+def stuck(Time_Passed,c887):
+    if(Time_Passed>5):
+        c887.GcsCommandset('VLS 20')
+        c887.GcsCommandset('MOV U 0 V 0')
+        time.sleep(.5)
+        c887.GcsCommandset('MOV U 0 V 5')
+        time.sleep(.5)
+        c887.GcsCommandset('MOV U 5 V 0')
+        time.sleep(.5)
+        c887.GcsCommandset('MOV U 0 V -5')
+        time.sleep(.5)
+        c887.GcsCommandset('MOV U 0-5 V 0')
+        time.sleep(.5)
+        c887.GcsCommandset('VLS 10')
         return True
     return False
+
 #*********************************************
 '''
 Input: Balls Current Region, List of balls prevous location, A list of previus Error, Picamera Class, joystick class, controller signal
@@ -58,7 +61,7 @@ def Move_Hexxy_JR(Curr_Region,Ball_Tracking,Error_List,video_getter,joystick,c88
         Tilt_X=round(Region[Curr_Region]["X_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)# Takes the given regions X tilt and incorporates PID
         #Note: for I term, its just elapse time times squared times I term, it makes it so it doesn't effect the hexapod tilt untill 3-4 seconds
         Tilt_Y=round(Region[Curr_Region]["Y_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)# Takes the given regions Y tilt and incorporates PID
-        if(Curr_Region=="Ramp0_1" or Curr_Region=="Ramp0_2"or Curr_Region=="Ring5_1" or Curr_Region == "Ring1_1"or Curr_Region == "Ring4_4"):
+        if(Curr_Region=="Ramp0_1" or Curr_Region=="Ramp0_2"or Curr_Region=="Ring5_1" or Curr_Region == "Ring1_1"or Curr_Region == "Ring4_4"or Curr_Region == "Ring3_4"):
             #This if statment just takes all of the regions with opening/ramp/goals, and ignores PID by tilting the Hexapod fully, The PID doesn't help these regions anyways
             Tilt_X=Region[Curr_Region]["X_pos"]
             Tilt_Y=Region[Curr_Region]["Y_pos"]
@@ -67,8 +70,8 @@ def Move_Hexxy_JR(Curr_Region,Ball_Tracking,Error_List,video_getter,joystick,c88
                 break
         else: # if the ball was not located, stops the loop
             break
-#         if(Stuck(Ball_Tracking)==True):
-#            continue
+        if(stuck(Elapse_Time,c887)==True):
+           return
         Can_Move_There=c887.ReadGCSCommand('vmo? u '+f"{Tilt_X}"+ ' v '+f"{Tilt_Y}") # Ask if the current position we are going to pass is acceptable
         if(int(Can_Move_There)==1): # if the next command is acceptable
             c887.GcsCommandset('MOV U '+f"{Tilt_X}"+' V '+f"{Tilt_Y}") #Sends the movement command to hexapod

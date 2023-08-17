@@ -1,4 +1,3 @@
-from create_region import create_region
 import numpy as np
 import math
 '''

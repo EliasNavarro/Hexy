@@ -19,7 +19,7 @@ def QUIT(device):
     time.sleep(2)
 
 def main():
-    time.sleep(1)#35)
+    time.sleep(35)
     gateway = PISerial("/dev/ttyUSB0", 115200)
     messages = GCSMessages(gateway)
     c887 = GCSCommands(gcsmessage=messages)

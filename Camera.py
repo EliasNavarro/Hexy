@@ -13,7 +13,7 @@ def picture_transform(frame):
     frame=frame[0:100,13:112] #crops the frame so its smaller
     frame=cv2.medianBlur(frame,5) # Blurs the frame using Median BLur of a 5x5 Kernel
     roi =np.zeros(frame.shape[:2],np.uint8)
-    roi =cv2.circle(roi,(53,46),47,255,cv2.FILLED)# Creates a circle around the maze (can ajust the (53,46)(*the origin*) and 47 (*Radius Length*)
+    roi =cv2.circle(roi,(53,46),46,255,cv2.FILLED)# Creates a circle around the maze (can ajust the (53,46)(*the origin*) and 47 (*Radius Length*)
     mask=np.ones_like(frame)*255 # A frame that is all white
     bounded_Region=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi)) #Takes the circle are and puts it on the white back ground 
     #Note: the image is already in grayscale
@@ -28,7 +28,7 @@ def semi_picture_transform(frame):
     frame=frame[0:100,13:112] #crops the frame so its smaller
     frame=cv2.medianBlur(frame,5) # Blurs the frame using Median BLur of a 5x5 Kernel
     roi =np.zeros(frame.shape[:2],np.uint8) 
-    roi =cv2.circle(roi, (53, 46),47,255,cv2.FILLED)# Creates a circle around the maze (can ajust the (53,46)(*the origin*) and 47 (*Radius Length*)
+    roi =cv2.circle(roi, (53, 46),46,255,cv2.FILLED)# Creates a circle around the maze (can ajust the (53,46)(*the origin*) and 47 (*Radius Length*)
     mask=np.ones_like(frame)*255# A frame that is all white
     bounded_Region=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi))#Takes the circle are and puts it on the white back ground
     #Note: Does not filter out at the end like picture transform
@@ -66,23 +66,4 @@ class VideoGet:
         self.piCam.close() # CLoses PICam
         #Stopping and CLosing allow the PI to create a new thread afterwards if needed
 
-'''
-Input: Raw Frame
-Output: Filtered Frame
-Description: Crops and Blurs frame to get a viewable picture of the frame, only used in debugging
-'''
-def threadVideoGet(source):
-    video_getter = VideoGet().start()
-    while True:
-        start=time.time()
-        if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
-            video_getter.stop()
-            cv2.destroyAllWindows()
-            break
-        #frame = video_getter.frame
-        #frame=video_getter.preserved_frame
-        width=int(frame.shape[1]*3)
-        height=int(frame.shape[0]*3)
-        end=time.time()
-        cv2.imshow("Video", frame)
-#threadVideoGet(0)
+

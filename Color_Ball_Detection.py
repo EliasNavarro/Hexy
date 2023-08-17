@@ -1,5 +1,4 @@
 import cv2
-from show_map import show_map
 from Region_Dictionary import Region
 from Region_Detection import Region_Detection,Ball_detection,Move_Hexxy_JR
 from picamera2 import Picamera2
@@ -14,6 +13,8 @@ Output: Nothing
 Description: Main FUnction that takes collects ball location and moves the hexapod based off it
 '''
 def Auto_Solver(joystick,c887):
+    c887.GcsCommandset('MOV U 0 V 0 W 0') #Zero the HexaPod in UVW
+    c887.GcsCommandset('MOV X 0 Y 0 Z 0') #Zero Hexapod in XYZ
     c887.GcsCommandset('VLS 10') #Sets Hexapod Velocity to 10
     video_getter= VideoGet() # Initates Picamera class to  collect vido on a seperate thread
     video_getter.start() # starts the thread
@@ -33,15 +34,15 @@ def Auto_Solver(joystick,c887):
                 #print(Current_Region)
                 Move_Hexxy_JR(Current_Region,Ball_Tracking,Error_List,video_getter,joystick,c887) # based on all the information, sends it to Move _Hexy_JR to move the Hexapod
                 Prev_Region=Current_Region # sets currents region to previus region
-    #show_map(Maze)
     video_getter.stop()#Stops Video Collection
+    c887.GcsCommandset('MOV U 0 V 0 W 0')# set the hexapod to 0
     return
-
-joy = PIJoystick()
-gateway = PISerial("/dev/ttyUSB0", 115200)
-messages = GCSMessages(gateway)
-c887 = GCSCommands(gcsmessage=messages)
-while(1):
-    Auto_Solver(joy,c887)
-    print("doodoo")
-    break
+# 
+# joy = PIJoystick()
+# gateway = PISerial("/dev/ttyUSB0", 115200)
+# messages = GCSMessages(gateway)
+# c887 = GCSCommands(gcsmessage=messages)
+# while(1):
+#     Auto_Solver(joy,c887)
+#     print("doodoo")
+#     break

@@ -31,7 +31,7 @@ def semi_picture_transform(frame):
     roi =cv2.circle(roi, (53, 46),46,255,cv2.FILLED)# Creates a circle around the maze (can ajust the (53,46)(*the origin*) and 47 (*Radius Length*)
     mask=np.ones_like(frame)*255# A frame that is all white
     bounded_Region=(cv2.bitwise_and(mask, frame, mask=roi) +cv2.bitwise_and(mask,mask,mask=~roi))#Takes the circle are and puts it on the white back ground
-    #Note: Does not filter out at the end like picture transform
+    #Note: Does not filter out at the end like picture transform, this allows the user to still see the frame 
     return bounded_Region
 
 '''

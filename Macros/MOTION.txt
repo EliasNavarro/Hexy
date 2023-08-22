@@ -112,7 +112,7 @@ WAC ONT? Z = 1
 WAC ONT? U = 1 
 WAC ONT? V = 1 
 WAC ONT? W = 1 
-SPI R 0 S 125 T 58 
+SPI R 0 S 125 T 61 
 MOV X 0 Y 0 Z 0 U -6 V 0 W 0 
 WAC ONT? X = 1 
 WAC ONT? Y = 1 
@@ -141,7 +141,7 @@ WAC ONT? Z = 1
 WAC ONT? U = 1 
 WAC ONT? V = 1 
 WAC ONT? W = 1 
-SPI R 125 S 0 T 58 
+SPI R 125 S 0 T 61 
 MOV X 0 Y 0 Z 0 U -6 V 0 W 0 
 WAC ONT? X = 1 
 WAC ONT? Y = 1 
@@ -170,7 +170,7 @@ WAC ONT? Z = 1
 WAC ONT? U = 1 
 WAC ONT? V = 1 
 WAC ONT? W = 1 
-SPI R 0 S -125 T 58 
+SPI R 0 S -125 T 61 
 MOV X 0 Y 0 Z 0 U -6 V 0 
 WAC ONT? X = 1 
 WAC ONT? Y = 1 
@@ -199,21 +199,6 @@ WAC ONT? Z = 1
 WAC ONT? U = 1 
 WAC ONT? V = 1 
 WAC ONT? W = 1 
-SPI R -125 S 0 T 58 
-MOV X 0 Y 0 Z 0 U -6 V 0 
-WAC ONT? X = 1 
-WAC ONT? Y = 1 
-WAC ONT? Z = 1 
-WAC ONT? U = 1 
-WAC ONT? V = 1 
-WAC ONT? W = 1 
-WGO 4 1 5 1 
-WAC WGO? 1 = 0 
-WAC WGO? 2 = 0 
-WAC WGO? 3 = 0 
-WAC WGO? 4 = 0 
-WAC WGO? 5 = 0 
-WAC WGO? 6 = 0 
 MOV X 0 Y 0 Z 0 U 0 V 0 W 0 
 WAC ONT? X = 1 
 WAC ONT? Y = 1 
@@ -231,5 +216,5 @@ WAC ONT? W = 1
 SPI R 0 S 0 T 0 
 SPI R 0 S 0 T 0 
 SPI R 0 S 0 T 0 
-JRC -232 DIO? 1 = 0
+JRC -218 DIO? 1 = 0
 

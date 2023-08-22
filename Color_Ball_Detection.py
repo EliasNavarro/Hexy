@@ -37,7 +37,7 @@ def Auto_Solver(joystick,c887):
     video_getter.stop()#Stops Video Collection
     c887.GcsCommandset('MOV U 0 V 0 W 0')# set the hexapod to 0
     return
-# 
+#
 # joy = PIJoystick()
 # gateway = PISerial("/dev/ttyUSB0", 115200)
 # messages = GCSMessages(gateway)
@@ -46,3 +46,4 @@ def Auto_Solver(joystick,c887):
 #     Auto_Solver(joy,c887)
 #     print("doodoo")
 #     break
+ 

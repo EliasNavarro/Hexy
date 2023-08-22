@@ -31,7 +31,7 @@ D_4=.95
 #Note: The entrance regions and ramps have targets and PIDS but are not used because in the code, those special Regions just go straight to their target position jsut to knock the ball in quickly
 Region = {
   "Ring1_1" :{"Area":[38,47,82,97],#[Inner Diameter, Outer Diameter, Min Angle, Max Angle]
-                              "X_pos":0,#Hexapod X tilt
+                              "X_pos":-1,#Hexapod X tilt
                              "Y_pos":-5,#Hexapod Y tilt
                              "P Gain":0.01,#P Value in PID
                              "I Gain":0.00,# I Value in PID
@@ -74,14 +74,14 @@ Region = {
                                "I Gain":1,
                                "D Gain":0.00,
                                "Target":[int(47*math.cos(0*convert)+Origin_X),int(47*math.sin(0*convert)+Origin_Y)]},
-    "Ring2_1" :{"Area":[30,38,6,80],"X_pos":-5,
-                                 "Y_pos":2,
+    "Ring2_1" :{"Area":[30,38,6,80],"X_pos":-4,
+                                 "Y_pos":1,
                                  "P Gain":P_2,
                                  "I Gain":I_2,
                                  "D Gain":D_2,
                                  "Target":[int(38*math.cos(-178*convert)+Origin_X),int(38*math.sin(-178*convert)+Origin_Y)]},
      "Ring2_3" :{"Area":[29,39,167,190],"X_pos":5,
-                                 "Y_pos":0,
+                                 "Y_pos":-1,
                                 "P Gain":.1,
                                  "I Gain":0.1,
                                  "D Gain":0,
@@ -117,7 +117,7 @@ Region = {
                                    "D Gain":D_3,
                                    "Target":[int(29*math.cos(-273*convert)+Origin_X),int(29*math.sin(-273*convert)+Origin_Y)]},
        "Ring3_2" :{"Area":[21,29,80,166],"X_pos":-5,
-                                   "Y_pos":-1,
+                                   "Y_pos":-.5,
                                    "P Gain":P_3,
                                    "I Gain":I_3,
                                    "D Gain":D_3,
@@ -153,7 +153,7 @@ Region = {
                                    "D Gain":D_4,
                                    "Target":[int(20*math.cos(-90*convert)+Origin_X),int(20*math.sin(-90*convert)+Origin_Y)]},
      "Ring4_1" :{"Area":[14,21,294,348],"X_pos":-5,
-                                 "Y_pos":-1,
+                                 "Y_pos":-.5,
                                  "P Gain":P_4,
                                  "I Gain":I_4,
                                  "D Gain":D_4,

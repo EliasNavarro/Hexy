@@ -61,6 +61,9 @@ def Move_Hexxy_JR(Curr_Region,Ball_Tracking,Error_List,video_getter,joystick,c88
         Tilt_X=round(Region[Curr_Region]["X_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)# Takes the given regions X tilt and incorporates PID
         #Note: for I term, its just elapse time times squared times I term, it makes it so it doesn't effect the hexapod tilt untill 3-4 seconds
         Tilt_Y=round(Region[Curr_Region]["Y_pos"]*((Error*P_Gain)+((Elapse_Time**2)*I_Gain)+(Diff_Error*D_Gain)),1)# Takes the given regions Y tilt and incorporates PID
+        if(Diff_Error>0): #If the Diff_Error is positive that means its going farther away from the target-> increase tilt which is sometimes too much so half the tilt 
+            Tilt_X=Tilt_X/2
+            Tilt_Y=Tilt_Y/2
         if(Curr_Region=="Ramp0_1" or Curr_Region=="Ramp0_2"or Curr_Region=="Ring5_1" or Curr_Region == "Ring1_1"or Curr_Region == "Ring4_4"or Curr_Region == "Ring3_4"):
             #This if statment just takes all of the regions with opening/ramp/goals, and ignores PID by tilting the Hexapod fully, The PID doesn't help these regions anyways
             Tilt_X=Region[Curr_Region]["X_pos"]
@@ -129,3 +132,53 @@ def Ball_detection(frame,Ball_Tracking):
         Ball_Tracking.pop(0)
         Ball_Tracking.append((0,0))
     return 0
+#*********************************************
+'''
+Input: linear or rotary motion input, values, controller
+Ouput: nothing
+Definition: Depending on the movement, it willl command the Hexapod to move a certain way and query it untilll it gets to its destinaiton
+'''
+def ONT(T, values,c887):
+    if(T=='UVW'):
+        c887.GcsCommandset('MOV U ' +str(values[0])+ ' V '+str(values[1])+' W '+str(values[2]))
+        Target=c887.ReadGCSCommand('ont?')
+        Target_Sum=(int(Target[2])+int(Target[7])+int(Target[12])+int(Target[17])+int(Target[22])+int(Target[27]))
+        while(Target_Sum!=6):
+            c887.GcsCommandset('MOV U ' +str(values[0])+ ' V '+str(values[1])+' W '+str(values[2]))
+            Target=c887.ReadGCSCommand('ont?')
+            Target_Sum=(int(Target[2])+int(Target[7])+int(Target[12])+int(Target[17])+int(Target[22])+int(Target[27]))
+            time.sleep(.01)
+    else:
+        c887.GcsCommandset('MOV X ' +str(values[0])+ ' Y '+str(values[1])+' Z '+str(values[2]))
+        Target=c887.ReadGCSCommand('ont?')
+        Target_Sum=(int(Target[2])+int(Target[7])+int(Target[12])+int(Target[17])+int(Target[22])+int(Target[27]))
+        while(Target_Sum!=6):
+            c887.GcsCommandset('MOV X ' +str(values[0])+ ' Y '+str(values[1])+' Z '+str(values[2]))
+            Target=c887.ReadGCSCommand('ont?')
+            Target_Sum=(int(Target[2])+int(Target[7])+int(Target[12])+int(Target[17])+int(Target[22])+int(Target[27]))
+            time.sleep(.01)
+'''
+Input: Controller
+Output: none
+Definition: After a victory Royale (getting to the middle" the Hexapod will push the ball through the ramp and then rotate and go up and down
+'''
+def fortnite_emote(c887):
+    time.sleep(1)
+    c887.GcsCommandset('VLS 50')
+    Vel=c887.ReadGCSCommand('vls?')
+    while(int(Vel)!=50):
+        c887.GcsCommandset('VLS 50')
+        Vel=c887.ReadGCSCommand('vls?')
+    ONT('UVW', [14,0,0],c887)
+    ONT('UVW', [0,0,0],c887)
+    ONT('XYZ', [0,0,0],c887)
+    ONT('UVW', [0,0,-30],c887)
+    ONT('UVW', [0,0,30],c887)
+    ONT('UVW', [0,0,0],c887)
+    ONT('XYZ', [0,0,24],c887)
+    ONT('XYZ', [0,0,0],c887)
+    c887.GcsCommandset('VLS 10')
+    Vel=c887.ReadGCSCommand('vls?')
+    while(int(Vel)!=10):
+        c887.GcsCommandset('VLS 10')
+        Vel=c887.ReadGCSCommand('vls?')

@@ -1,6 +1,8 @@
 import cv2
+import time
+import math
 from Region_Dictionary import Region
-from Region_Detection import Region_Detection,Ball_detection,Move_Hexxy_JR
+from Region_Detection import Region_Detection,Ball_detection,Move_Hexxy_JR,fortnite_emote
 from picamera2 import Picamera2
 from Camera import VideoGet
 from PIJoystick import PIJoystick
@@ -14,13 +16,17 @@ Description: Main FUnction that takes collects ball location and moves the hexap
 '''
 def Auto_Solver(joystick,c887):
     c887.GcsCommandset('MOV U 0 V 0 W 0') #Zero the HexaPod in UVW
+    time.sleep(.1)
     c887.GcsCommandset('MOV X 0 Y 0 Z 0') #Zero Hexapod in XYZ
+    time.sleep(.1)
     c887.GcsCommandset('VLS 10') #Sets Hexapod Velocity to 10
+    time.sleep(.1)
     video_getter= VideoGet() # Initates Picamera class to  collect vido on a seperate thread
     video_getter.start() # starts the thread
     Ball_Tracking=[(0,0)] # List of where the balls been, have a filler value to begin
     Prev_Region="Deez Nuts" # Variable of Previus Region used in other function, has a filler value to begin
     Error_List=[0,0] #List of the Error of the Ball from target, has two filler variables to begin with
+    Emote_Timer=time.time()
     while (joystick.read()[2]==0): # Reads Joystick, continues to autosolve untill left button is pressed
         frame = video_getter.frame # Takes frame from camera
         P_frame=video_getter.preserved_frame # Takes preserved Frame (not used only in debugging)
@@ -32,18 +38,23 @@ def Auto_Solver(joystick,c887):
                     Ball_Tracking=[(0,0)] # reset Ball tracking
                     Error_List=[0,0] # reset error tracking
                 #print(Current_Region)
+                if(Current_Region=="Ramp0_1" or Current_Region=="Ramp0_2"): #Once the Ball has crossed the ramp
+                    if(time.time()-Emote_Timer>5): # Once a certain amount of time has passed since last emote (if this wasn't here it could get stuck on ramp and keep emoting)
+                        time.sleep(.5)
+                        fortnite_emote(c887)# Calls fortnite emote so the hexapod does an epic fortnite emote after its victory royale
+                        Emote_Timer=time.time()# resets emote timer till next time
                 Move_Hexxy_JR(Current_Region,Ball_Tracking,Error_List,video_getter,joystick,c887) # based on all the information, sends it to Move _Hexy_JR to move the Hexapod
                 Prev_Region=Current_Region # sets currents region to previus region
     video_getter.stop()#Stops Video Collection
     c887.GcsCommandset('MOV U 0 V 0 W 0')# set the hexapod to 0
     return
-#
+
 # joy = PIJoystick()
 # gateway = PISerial("/dev/ttyUSB0", 115200)
 # messages = GCSMessages(gateway)
 # c887 = GCSCommands(gcsmessage=messages)
 # while(1):
 #     Auto_Solver(joy,c887)
-#     print("doodoo")
+#     #fortnite_emote(c887)
 #     break
  

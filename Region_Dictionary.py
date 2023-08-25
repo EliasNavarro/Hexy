@@ -9,7 +9,7 @@ Origin_Y=46 #Origin of the Y Axis which is located in th center of the Maze
 
 convert=math.pi/180 # Conversion from degrees to radians
 #PID Values for the two regions around the target region of the first ring
-P_1=.011
+P_1=.01
 I_1=0.09
 D_1=1.05
 #PID Values for the two regions farthest from the first ring target
@@ -21,8 +21,8 @@ P_2=0.01
 I_2=0.07
 D_2=.9
 #PID Values for the 3rd ring
-P_3=0.01
-I_3=0.08
+P_3=0.009
+I_3=0.07
 D_3=.95
 #PID Values for the 4th ring
 P_4=0.01
@@ -81,7 +81,7 @@ Region = {
                                  "D Gain":D_2,
                                  "Target":[int(38*math.cos(-178*convert)+Origin_X),int(38*math.sin(-178*convert)+Origin_Y)]},
      "Ring2_3" :{"Area":[29,39,167,190],"X_pos":5,
-                                 "Y_pos":-1,
+                                 "Y_pos":-1.5,
                                 "P Gain":.1,
                                  "I Gain":0.1,
                                  "D Gain":0,
@@ -104,7 +104,7 @@ Region = {
                                    "I Gain":I_2,
                                    "D Gain":D_2,
                                    "Target":[int(38*math.cos(-178*convert)+Origin_X),int(38*math.sin(-178*convert)+Origin_Y)]},
-      "Ring3_4" :{"Area":[21,29,259,288],"X_pos":0,
+      "Ring3_4" :{"Area":[21,29,259,288],"X_pos":-1.5,
                                    "Y_pos":5,
                                    "P Gain":.2,
                                    "I Gain":0.1,
